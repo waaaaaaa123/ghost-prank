@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GHOST TERMINAL</title>
+
+<style>
+body{
+    margin:0;
+    background:black;
+    color:#00ff66;
+    font-family:monospace;
+    overflow:hidden;
+}
+
+#bg{
+    position:fixed;
+    inset:0;
+    opacity:0.08;
+    pointer-events:none;
+    font-size:18px;
+    line-height:18px;
+    white-space:pre;
+}
+
+#main{
+    padding:25px;
+    position:relative;
+    z-index:2;
+}
+
+#title{
+    color:red;
+    font-size:32px;
+    margin-bottom:20px;
+    text-shadow:0 0 10px red;
+}
+
+#terminal{
+    font-size:20px;
+    white-space:pre-line;
+}
+
+.bar{
+    width:300px;
+    height:25px;
+    border:2px solid #00ff66;
+    margin-top:20px;
+}
+
+.fill{
+    height:100%;
+    width:0%;
+    background:#00ff66;
+    transition:1s;
+}
+
+.shake{
+    animation:shake 0.2s infinite;
+}
+
+@keyframes shake{
+    0%{transform:translate(2px,2px);}
+    25%{transform:translate(-2px,1px);}
+    50%{transform:translate(2px,-2px);}
+    75%{transform:translate(-1px,2px);}
+    100%{transform:translate(1px,-1px);}
+}
+
+#final{
+    font-size:35px;
+    color:red;
+    margin-top:30px;
+    text-shadow:0 0 15px red;
+}
+</style>
+</head>
+<body>
+
+<div id="bg"></div>
+
+<div id="main">
+    <div id="title">𓆩 GHOST TERMINAL 𓆪</div>
+
+    <div id="terminal"></div>
+
+    <div class="bar">
+        <div class="fill" id="fill"></div>
+    </div>
+
+    <div id="final"></div>
+</div>
+
+<audio id="beep">
+<source src="https://www.soundjay.com/button/beep-07.wav" type="audio/wav">
+</audio>
+
+<script>
+
+let username = prompt("اكتب اسمك 😈") || "UNKNOWN";
+
+let terminal = document.getElementById("terminal");
+let final = document.getElementById("final");
+let fill = document.getElementById("fill");
+let beep = document.getElementById("beep");
+
+let lines = [
+"[+] Connecting to device...",
+"[+] Device Found...",
+"[+] Scanning photos...",
+"[+] Accessing messages...",
+"[+] Camera Enabled...",
+"[+] Microphone Enabled...",
+"[+] Tracking Location...",
+"",
+"[ TARGET IDENTIFIED ]",
+"USER: " + username,
+"",
+"[ DOWNLOADING DATA ]"
+];
+
+let i = 0;
+
+function playBeep(){
+    beep.currentTime = 0;
+    beep.play().catch(()=>{});
+}
+
+function typeLines(){
+    if(i < lines.length){
+        terminal.innerHTML += lines[i] + "\n";
+
+        playBeep();
+
+        if(i > 3){
+            document.body.classList.add("shake");
+        }
+
+        i++;
+        setTimeout(typeLines, 1000);
+    } else {
+        loadBar();
+    }
+}
+
+let progress = 0;
+
+function loadBar(){
+
+    let interval = setInterval(()=>{
+
+        progress += 10;
+        fill.style.width = progress + "%";
+
+        playBeep();
+
+        if(progress >= 100){
+
+            clearInterval(interval);
+
+            setTimeout(()=>{
+
+                document.body.classList.remove("shake");
+
+                final.innerHTML =
+                "💀 تم تهكير جهازك ياهطف " + username +
+                "<br><br>  
+
+            },1000);
+        }
+
+    },500);
+}
+
+typeLines();
+
+let matrix = "";
+for(let i=0;i<300;i++){
+    matrix += Math.random() > 0.5 ? "1" : "0";
+    if(i % 50 == 0) matrix += "\n";
+}
+document.getElementById("bg").innerText = matrix;
+
+</script>
+
+</body>
+</html>
